@@ -6,6 +6,7 @@
 
         public string Name { get; set; }
 
+        //hamada
         public string BrandImage { get; set; }
 
 
