@@ -1,0 +1,6 @@
+@ASOS.APIs_HostAddress = http://localhost:5269
+
+GET {{ASOS.APIs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
