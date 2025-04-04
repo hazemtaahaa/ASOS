@@ -10,6 +10,12 @@ namespace ASOS.DAL.Configurations
         {
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Amount).IsRequired().HasColumnType("decimal(18,2)");
+
+            builder.HasOne(p => p.UserOrderPayment)
+                .WithOne(uop => uop.Payment)
+                .HasForeignKey<UserOrderPayment>(uop => uop.PaymentId);
+
+           
         }
     }
 }

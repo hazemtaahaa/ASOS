@@ -8,7 +8,7 @@ namespace ASOS.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<UserOrderPayment> builder)
         {
-            builder.HasKey(uop => new { uop.Id });
+            builder.HasKey(uop => uop.Id );
 
             builder
                 .HasOne(uop => uop.User)
@@ -17,13 +17,13 @@ namespace ASOS.DAL.Configurations
 
             builder
                 .HasOne(uop => uop.Order)
-                .WithMany(o => o.UserOrderPayments)
-                .HasForeignKey(uop => uop.OrderId);
+                .WithOne(o => o.UserOrderPayment)
+                .HasForeignKey<UserOrderPayment>(uop => uop.OrderId);
 
             builder
                 .HasOne(uop => uop.Payment)
-                .WithMany(p => p.UserOrderPayments)
-                .HasForeignKey(uop => uop.PaymentId);
+                .WithOne(p => p.UserOrderPayment)
+                .HasForeignKey<UserOrderPayment>(uop => uop.PaymentId);
         }
     }
 

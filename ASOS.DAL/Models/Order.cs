@@ -4,21 +4,17 @@
     {
         public Guid Id { get; set; }
 
-        public decimal TotalAmount { get; set; }
+        public decimal? TotalAmount { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
 
-        public DateTime ArrivalDate { get; set; }
+        public DateTime ArrivalDate { get; set; } = DateTime.Now.AddDays(7);
 
         public OrderStatus Status { get; set; }
 
-        //public Guid UserId { get; set; } 
+        public UserOrderPayment? UserOrderPayment { get; set; } 
 
-        //public User User { get; set; }
-
-        public ICollection<UserOrderPayment> UserOrderPayments { get; set; } = new HashSet<UserOrderPayment>();
-
-        public ICollection<OrderItems> OrderItems { get; set; } = new HashSet<OrderItems>();
+        public ICollection<OrderItem> OrderItems { get; set; } = new HashSet<OrderItem>();
     }
 
 }
