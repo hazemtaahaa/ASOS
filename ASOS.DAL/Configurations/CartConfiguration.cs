@@ -9,8 +9,11 @@ namespace ASOS.DAL.Configurations
         public void Configure(EntityTypeBuilder<Cart> builder)
         {
             builder.HasKey(c => c.Id);
+
+
             builder.HasOne(c => c.User)
-                   .WithOne(u => u.Cart);
+                   .WithOne(u => u.Cart)
+                   .HasForeignKey<Cart>(u => u.UserId);
         }
     }
 }
