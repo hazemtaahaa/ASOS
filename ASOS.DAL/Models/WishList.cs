@@ -4,10 +4,10 @@
     {
         public Guid Id { get; set; }
 
-        public ICollection<Product> Products { get; set; } = new HashSet<Product>();
+        public ICollection<WishListProduct> WishListProducts { get; set; } = new HashSet<WishListProduct>();
 
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
-        public User User { get; set; }
+        public User? User { get; set; }
     }
 }

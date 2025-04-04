@@ -1,4 +1,8 @@
 
+using ASOS.DAL;
+using ASOS.DAL.Context;
+using Microsoft.EntityFrameworkCore;
+
 namespace ASOS.APIs
 {
     public class Program
@@ -10,6 +14,12 @@ namespace ASOS.APIs
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            //builder.Services.AddDbContext<StoreContext>(o => o.UseSqlServer(
+            //    builder.Configuration.GetConnectionString("Default")
+            //));
+            builder.Services.AddDataAccessServices(builder.Configuration);
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
