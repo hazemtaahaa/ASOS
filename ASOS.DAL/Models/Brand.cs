@@ -10,7 +10,7 @@ namespace ASOS.DAL.Models
         public string Name { get; set; }
         //comment
 
-        //Hazem Taha + Mahmoud
+        //Hazem Taha + Mahmoud Adel
         public string? BrandImage { get; set; }
 
         public ICollection<Product> Products { get; set; } = new HashSet<Product>();
