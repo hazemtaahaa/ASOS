@@ -5,36 +5,33 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ASOS.DAL.Context
 {
-    public class StoreContext : IdentityDbContext
+    public class StoreContext : IdentityDbContext<User>
     {
         public StoreContext(DbContextOptions<StoreContext> options) : base(options)
         {
         }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductImages> ProductImages { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderItems> OrderItems { get; set; }
-        public DbSet<WishList> wishListItems { get; set; }
-        public DbSet<CartItems> CartItems { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<WishList> wishList { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
         public DbSet<UserOrderPayment> UserOrderPayments { get; set; }
         public DbSet<Payment> Payments { get; set; }
-
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("ConnectionString");
-        }
+        public DbSet<WishListProduct> WishListProducts { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new UserConfiguration());
-            modelBuilder.ApplyConfiguration(new ProductConfiguration());
-            modelBuilder.ApplyConfiguration(new OrderConfiguration());
-            modelBuilder.ApplyConfiguration(new CartConfiguration());
-            modelBuilder.ApplyConfiguration(new PaymentConfiguration());
+            base.OnModelCreating(modelBuilder);
+
+            // Apply all the configuration classes from the project the contains the StoreContext class
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(StoreContext).Assembly);
+
         }
 
     }    

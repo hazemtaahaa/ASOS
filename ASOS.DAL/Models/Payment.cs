@@ -4,18 +4,17 @@
     {
         public Guid Id { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
 
-        public PaymentStatus Status { get; set; }
+        public PaymentStatus? Status { get; set; }
 
-        public PaymentMethod PaymentMethod { get; set; }
+        public PaymentMethod? PaymentMethod { get; set; }
 
         public Guid? StripPaymentId { get; set; }
 
-        public decimal Amount { get; set; }
+        public decimal? Amount { get; set; }
 
-        public ICollection<UserOrderPayment> UserOrderPayments { get; set; } = new HashSet<UserOrderPayment>();
-
+        public UserOrderPayment UserOrderPayment { get; set; }
 
     }
 }

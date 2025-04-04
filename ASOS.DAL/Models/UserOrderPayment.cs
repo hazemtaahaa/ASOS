@@ -6,15 +6,15 @@
 
         public Guid PaymentId { get; set; }
 
-        public Payment Payment { get; set; }
+        public Payment? Payment { get; set; }
 
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
-        public User User { get; set; }
+        public User? User { get; set; }
 
         public Guid OrderId { get; set; }
 
-        public Order Order { get; set; }
+        public Order? Order { get; set; }
 
     }
 }

@@ -8,19 +8,26 @@ namespace ASOS.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            builder.ToTable("User"); 
             builder.HasKey(u => u.Id);
-            builder.Property(u => u.Name)
-                .IsRequired()
-                .HasMaxLength(100);
             builder.Property(u => u.Address)
-                .IsRequired()
                 .HasMaxLength(200);
             builder.Property(u => u.City)
-                .IsRequired()
                 .HasMaxLength(100);
             builder.Property(u => u.Country)
-                .IsRequired()
                 .HasMaxLength(100);
+
+            builder.HasMany(u => u.UserOrderPayments)
+                .WithOne(uop => uop.User)
+                .HasForeignKey(uop => uop.UserId);
+
+            builder.HasOne(u => u.Cart)
+                .WithOne(c => c.User)
+                .HasForeignKey<Cart>(u => u.UserId);
+
+            builder.HasOne(u => u.WishList)
+                   .WithOne(w => w.User)
+                   .HasForeignKey<WishList>(u => u.UserId);
         }
 
     }
