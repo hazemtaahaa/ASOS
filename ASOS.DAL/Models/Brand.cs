@@ -8,7 +8,9 @@ namespace ASOS.DAL.Models
 
         [Required(ErrorMessage  = "Name is Required")]
         public string Name { get; set; }
+        //comment
 
+        //Hazem Taha
         public string? BrandImage { get; set; }
 
         public ICollection<Product> Products { get; set; } = new HashSet<Product>();
