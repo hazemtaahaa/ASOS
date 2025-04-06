@@ -10,9 +10,4 @@
     <ProjectReference Include="..\ASOS.DAL\ASOS.DAL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Managers\" />
-    <Folder Include="Validators\" />
-  </ItemGroup>
-
 </Project>
