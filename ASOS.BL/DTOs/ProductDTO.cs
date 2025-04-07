@@ -1,4 +1,5 @@
 using ASOS.DAL;
+using ASOS.DAL.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace ASOS.BL.DTOs
