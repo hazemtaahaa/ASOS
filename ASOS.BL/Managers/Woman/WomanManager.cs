@@ -35,4 +35,19 @@ public class WomanManager : IWomanManager
             ImageUrls = d.ProductImages.Select(i => i.ImageUrl).ToList()
         }).ToList();
     }
+
+    public async Task<List<BrandDTO>> GetAllBrandsAsync()
+    {
+        var productFromDB = await _unitOfWork.Products.GetAllProductAsync();
+        var womenProducts = productFromDB.Where(p => p.Section == Section.Female);
+        var brands = womenProducts.Select(p => p.Brand).Distinct().ToList();
+        var brandDTOs = brands.Select(b => new BrandDTO
+        {
+            Id = b.Id,
+            Name = b.Name,
+            BrandImage = b.BrandImage 
+        }).ToList();
+
+        return brandDTOs;
+    }
 }
