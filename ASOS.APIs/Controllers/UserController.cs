@@ -2,6 +2,7 @@ using ASOS.DAL;
 using ASOS.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASOS.APIs.Controllers
 {
