@@ -12,5 +12,7 @@ public static class BusinessExtensions
     { 
          services.AddScoped<IWomanManager, WomanManager>(); 
         services.AddScoped<ICategoryManager, CategoryManager>();
+
+        services.AddScoped<IMenManager, MenManager>();
     }
 }
