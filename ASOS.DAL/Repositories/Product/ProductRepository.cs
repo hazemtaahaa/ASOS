@@ -23,7 +23,15 @@ public class ProductRepository : GenericRepository<Product> ,IProductRepository
             .ToListAsync();
     }
 
-
+    public async Task<Product> GetProductById(Guid id)
+    {
+        return await _context.Products
+             .Include(p => p.ProductImages)
+            .Include(p => p.Brand)
+            .Include(p => p.Category)
+            .Include(p => p.ProductType)
+            .FirstOrDefaultAsync(p => p.Id == id);
+    }
 }
 
 
