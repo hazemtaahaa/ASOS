@@ -1,6 +1,4 @@
 ﻿namespace ASOS.BL.DTOs.UserDto
 {
-	internal class TokenDto
-	{
-	}
+	public record TokenDto(string Token, DateTime Expiry);
 }
