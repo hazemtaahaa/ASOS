@@ -1,5 +1,6 @@
 ﻿using ASOS.BL;
 using ASOS.BL.Managers.Category;
+using ASOS.BL.Managers.Product;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,5 +15,6 @@ public static class BusinessExtensions
         services.AddScoped<ICategoryManager, CategoryManager>();
 
         services.AddScoped<IMenManager, MenManager>();
+        services.AddScoped<IProductManager, ProductManager>();
     }
 }
