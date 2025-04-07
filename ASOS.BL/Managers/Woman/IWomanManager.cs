@@ -1,10 +1,8 @@
 ﻿using ASOS.BL.DTOs;
-using ASOS.BL.DTOs.Common;
 
-namespace ASOS.BL.Managers.Woman
+namespace ASOS.BL;
+
+public interface IWomanManager
 {
-    public interface IWomanManager
-    {
-        Task<List<ProductDTO>> GetAllAsync();
-    }
+    Task<List<ProductDTO>> GetAllAsync();
 }

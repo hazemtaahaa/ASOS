@@ -1,6 +1,5 @@
-﻿using ASOS.DAL.Context;
-using ASOS.DAL.Repositories.Brand;
-using Microsoft.EntityFrameworkCore;
+﻿using ASOS.BL;
+using ASOS.BL.Managers.Category;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +10,7 @@ public static class BusinessExtensions
 {
     public static void AddBusinessServices(this IServiceCollection services,IConfiguration configuration)
     { 
-         
+         services.AddScoped<IWomanManager, WomanManager>(); 
+        services.AddScoped<ICategoryManager, CategoryManager>();
     }
 }

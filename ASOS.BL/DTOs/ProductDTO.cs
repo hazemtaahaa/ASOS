@@ -28,11 +28,11 @@ namespace ASOS.BL.DTOs
         
         public DateTime CreatedAt { get; set; }
         
-        public Guid BrandId { get; set; }
+        public string BrandName { get; set; }
+
+        public string CategoryName { get; set; }
         
-        public Guid CategoryId { get; set; }
-        
-        public Guid ProductTypeId { get; set; }
+        public string ProductTypeName { get; set; }
         
         public ICollection<string> ImageUrls { get; set; } = new List<string>();
     }
