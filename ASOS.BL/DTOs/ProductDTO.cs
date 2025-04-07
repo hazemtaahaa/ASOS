@@ -1,4 +1,5 @@
 using ASOS.DAL;
+using ASOS.DAL.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace ASOS.BL.DTOs
@@ -28,7 +29,8 @@ namespace ASOS.BL.DTOs
         
         public DateTime CreatedAt { get; set; }
         
-        public Guid BrandId { get; set; }
+        public string BrandName { get; set; }
+       
         
         public Guid CategoryId { get; set; }
         
