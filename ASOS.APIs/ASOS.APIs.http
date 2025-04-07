@@ -4,3 +4,20 @@ GET {{ASOS.APIs_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+Post {{ASOS.APIs_HostAddress}}/api/User/register
+Accept: application/json
+Content-Type: application/json
+{
+    "userName":"Ahmed",
+    "email":"ahmed@gmail.com",
+    "password":"123456"
+}
+
+
+
+
+
+
+
+
