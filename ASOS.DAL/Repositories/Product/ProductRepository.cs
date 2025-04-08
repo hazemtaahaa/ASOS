@@ -22,15 +22,7 @@ public class ProductRepository : GenericRepository<Product> ,IProductRepository
             .Include(p => p.ProductType)
             .ToListAsync();
     }
-    public async Task<IEnumerable<Product>> GetAllProductAsync()
-    {
-        return await _context.Products
-            .Include(p => p.ProductImages)
-            .Include(p => p.Brand)
-            .Include(p => p.Category)
-            .Include(p => p.ProductType)
-            .ToListAsync();
-    }
+  
 
 }
 

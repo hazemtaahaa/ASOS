@@ -29,9 +29,9 @@ public class MenManager : IMenManager
             Section = d.Section,
             UpdatedAt = (DateTime)d.UpdatedAt,
             CreatedAt = d.CreatedAt,
-            BrandName = d.Brand.,
-            CategoryId = d.CategoryId,
-            ProductTypeId = d.ProductTypeId,
+            BrandName = d.Brand.Name,
+            ProductTypeName = d.ProductType.Name,
+            CategoryName = d.Category.Name,
             ImageUrls = d.ProductImages.Select(i => i.ImageUrl).ToList()
         }).ToList();
     }
