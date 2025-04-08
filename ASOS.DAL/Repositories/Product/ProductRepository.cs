@@ -22,7 +22,7 @@ public class ProductRepository : GenericRepository<Product> ,IProductRepository
             .Include(p => p.ProductType)
             .ToListAsync();
     }
-  
+
 
 }
 
