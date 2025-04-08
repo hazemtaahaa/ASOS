@@ -30,8 +30,8 @@ public class MenManager : IMenManager
             UpdatedAt = (DateTime)d.UpdatedAt,
             CreatedAt = d.CreatedAt,
             BrandName = d.Brand.Name,
-            ProductTypeName = d.ProductType.Name,
             CategoryName = d.Category.Name,
+            ProductTypeName = d.ProductType.Name,
             ImageUrls = d.ProductImages.Select(i => i.ImageUrl).ToList()
         }).ToList();
     }
