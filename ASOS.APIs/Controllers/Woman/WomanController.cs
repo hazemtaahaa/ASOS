@@ -160,13 +160,29 @@ namespace ASOS.APIs.Controllers.Woman
             return Ok(new GeneralResult<List<ProductDTO>>() { Data = productsByCategory, Success = true, Errors = [] });
         }
 
-        [HttpGet("accessories/Scarves")]
+        [HttpGet("accessories/scarves")]
         public async Task<IActionResult> GetScarvesWomenProducts()
         {
             var products = await _womanManager.GetAllAsync();
             var productsByCategory = products.Where(p => p.ProductTypeName == "Scarves").ToList();
 
             return Ok(new GeneralResult<List<ProductDTO>>() { Data = productsByCategory, Success = true, Errors = [] });
+        }
+
+
+        [HttpGet("brands")]
+        public async Task<IActionResult> GetWomanBrands()
+        {
+            var brands = await _womanManager.GetAllBrandsAsync();
+            return Ok(new GeneralResult<List<BrandDTO>>() { Data = brands, Success = true, Errors = [] });
+        }
+
+        [HttpGet("{brand}")]
+        public async Task<IActionResult> GetProductsByBrand(string brand)
+        {
+            var products = await _womanManager.GetAllAsync();
+            var productsByBrand = products.Where(p => p.BrandName == brand).ToList();
+            return Ok(new GeneralResult<List<ProductDTO>>() { Data = productsByBrand, Success = true, Errors = [] });
         }
     }
 }
