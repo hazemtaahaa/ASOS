@@ -4,12 +4,11 @@ using ASOS.DAL;
 using ASOS.DAL.Context;
 using ASOS.DAL.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ASOS.APIs
 {
-    public class Program
+	public class Program
     {
         public static void Main(string[] args)
         {
@@ -71,6 +70,7 @@ namespace ASOS.APIs
 
             app.UseHttpsRedirection();
 
+			app.UseAuthentication();
             app.UseAuthorization();
 
 
