@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using ASOS.BL.DTOs.User;
 using ASOS.BL.DTOs.UserDto;
+using ASOS.DAL;
 using ASOS.DAL.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
@@ -17,11 +18,15 @@ public class UserController:ControllerBase
 {
 	private readonly IConfiguration _configuration;
 	private readonly UserManager<User> _userManager;
+	private readonly IUnitOfWork _unitOfWork;
 
-	public UserController(IConfiguration configuration,UserManager<User> userManager)
+	public UserController(IConfiguration configuration,
+		UserManager<User> userManager
+		,IUnitOfWork unitOfWork)
 	{
 		_configuration= configuration;
 		_userManager= userManager;
+		_unitOfWork= unitOfWork;
 	}
 
 	[HttpPost]
@@ -71,7 +76,18 @@ public class UserController:ControllerBase
 			};
 
 		await _userManager.AddClaimsAsync(user, claims);
+		var wishList = new DAL.Models.WishList
+		{
+			UserId = user.Id,
+		};
+		var cart = new DAL.Models.Cart
+		{
+			UserId = user.Id,
+		};
 
+		await _unitOfWork.WishLists.AddAsync(wishList);
+		await _unitOfWork.Carts.AddAsync(cart);
+		await _unitOfWork.CompleteAsync();
 		return TypedResults.NoContent();
 	}
 
@@ -129,5 +145,13 @@ public class UserController:ControllerBase
 		};
 		return TypedResults.Ok(UserInfo);
 	}
+
+	/////////////////////////////////////////////////////////////////////////////////////
+
+	
+
+	
+
+	
 
 }
