@@ -1,4 +1,4 @@
-@ASOS.APIs_HostAddress = http://localhost:5269
+@ASOS.APIs_HostAddress = https://localhost:7023
 
 GET {{ASOS.APIs_HostAddress}}/weatherforecast/
 Accept: application/json
@@ -21,3 +21,7 @@ Content-Type: application/json
 
 
 
+
+GET {{ASOS.APIs_HostAddress}}/api/men/shoes/loafers
+
+###
