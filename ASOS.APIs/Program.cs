@@ -1,11 +1,13 @@
-
 using System.Text;
+using ASOS.APIs.Swagger;
 using ASOS.DAL;
 using ASOS.DAL.Context;
 using ASOS.DAL.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace ASOS.APIs
 {
@@ -27,7 +29,37 @@ namespace ASOS.APIs
             builder.Services.AddBusinessServices(builder.Configuration);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ASOS API", Version = "v1" });
+                
+                // Add support for file uploads
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+
+                // Configure file upload support
+                c.OperationFilter<SwaggerFileOperationFilter>();
+            });
 
 			#region Identity
 			builder.Services.AddIdentityCore<User>(options =>
@@ -62,17 +94,29 @@ namespace ASOS.APIs
 
 			var app = builder.Build();
 
+            #region Images
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider= new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(),  "Images")),
+                RequestPath = "/Images"
+            });
+            #endregion
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASOS API V1");
+                    c.RoutePrefix = string.Empty;
+                });
             }
 
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
