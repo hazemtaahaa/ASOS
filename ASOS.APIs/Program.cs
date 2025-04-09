@@ -11,7 +11,7 @@ using Microsoft.OpenApi.Models;
 
 namespace ASOS.APIs
 {
-    public class Program
+	public class Program
     {
         public static void Main(string[] args)
         {
@@ -116,6 +116,7 @@ namespace ASOS.APIs
 
             app.UseHttpsRedirection();
 
+			app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
