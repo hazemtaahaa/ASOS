@@ -10,6 +10,8 @@ namespace ASOS.APIs.Controllers.Product
     {
         [HttpPost]
         [Consumes("multipart/form-data")]
+        [ProducesResponseType(typeof(GeneralResult<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadFile([FromForm] IFormFile file)
         {
             var extention = Path.GetExtension(file.FileName);
@@ -32,7 +34,9 @@ namespace ASOS.APIs.Controllers.Product
             #endregion
 
             #region Storing The Image
+
             var newFileName = Guid.NewGuid() + extention;
+
             var imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "Images");
             
             if (!Directory.Exists(imagesPath))
@@ -48,6 +52,7 @@ namespace ASOS.APIs.Controllers.Product
             }
 
             var fileUrl = $"{Request.Scheme}://{Request.Host}/Images/{newFileName}";
+
             return Ok(new GeneralResult<string>() { Data = fileUrl, Success = true, Errors = [] });
             #endregion
         }
