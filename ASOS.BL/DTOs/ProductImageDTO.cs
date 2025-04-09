@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace ASOS.BL.DTOs
@@ -10,7 +11,6 @@ namespace ASOS.BL.DTOs
         
         public string ImageUrl { get; set; }
         
-        public bool IsMain { get; set; }
     }
 
     public class ProductImageCreateDTO
@@ -19,15 +19,13 @@ namespace ASOS.BL.DTOs
         public Guid ProductId { get; set; }
         
         [Required]
-        public string ImageUrl { get; set; }
+        public IFormFile ImageFile { get; set; }
         
-        public bool IsMain { get; set; }
     }
 
     public class ProductImageUpdateDTO
     {
-        public string ImageUrl { get; set; }
+        public IFormFile ImageFile { get; set; }
         
-        public bool IsMain { get; set; }
     }
 } 
