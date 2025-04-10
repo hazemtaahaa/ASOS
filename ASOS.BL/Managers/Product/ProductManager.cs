@@ -1,6 +1,8 @@
 ﻿using ASOS.BL.DTOs;
 using ASOS.DAL;
+
 using Microsoft.Extensions.Configuration;
+
 
 
 namespace ASOS.BL.Managers.Product
@@ -8,12 +10,14 @@ namespace ASOS.BL.Managers.Product
     public class ProductManager : IProductManager
     {
         private readonly IUnitOfWork _unitOfWork;
+
         private readonly IConfiguration _configuration;
 
         public ProductManager(IUnitOfWork unitOfWork,IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
+
         }
 
         public async Task<ProductDTO> CreateAsync(ProductCreateDTO product)
@@ -29,7 +33,9 @@ namespace ASOS.BL.Managers.Product
                 CategoryId = product.CategoryId,
                 ProductTypeId = product.ProductTypeId,
             };
+
             await _unitOfWork.Products.AddAsync(productDb);
+
             await _unitOfWork.CompleteAsync();
 
             return new ProductDTO
@@ -65,6 +71,7 @@ namespace ASOS.BL.Managers.Product
             //    Console.WriteLine(product.ProductImages.FirstOrDefault()?.ImageUrl);
             //}
 
+
             return products.Select(d => new ProductDTO
             {
                 Id = d.Id,
@@ -74,6 +81,7 @@ namespace ASOS.BL.Managers.Product
                 Rate = (decimal)d.Rate,
                 Quantity = (int)d.Quantity,
                 Section = d.Section,
+
                 UpdatedAt = d.UpdatedAt,
                 CreatedAt = d.CreatedAt,
                 BrandName = d.Brand?.Name ?? string.Empty,
@@ -81,6 +89,7 @@ namespace ASOS.BL.Managers.Product
                 ProductTypeName = d.ProductType?.Name ?? string.Empty,
                 ImageUrls = d.ProductImages?.Select(i => $"{_configuration["ApiBaseUrl"]}{i.ImageUrl}").ToList() ?? new List<string>()
             }).ToList();
+
         }
         public async Task<ProductDTO> GetByIdAsync(Guid Id)
         {
@@ -100,7 +109,9 @@ namespace ASOS.BL.Managers.Product
                 BrandName = product.Brand.Name,
                 CategoryName = product.Category.Name,
                 ProductTypeName = product.ProductType.Name,
+
                 ImageUrls = product.ProductImages.Select(i => $"{_configuration["ApiBaseUrl"]}{i.ImageUrl}").ToList()
+
             };
         }
 

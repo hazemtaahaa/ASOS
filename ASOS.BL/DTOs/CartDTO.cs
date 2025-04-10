@@ -8,9 +8,11 @@ namespace ASOS.BL.DTOs
         
         public string UserId { get; set; }
 
+
         public string? PaymentIntentId { get; set; }
 
         public string? ClientSecrete { get; set; } 
+
 
         public ICollection<CartItemDTO> CartItems { get; set; } = new List<CartItemDTO>();
         

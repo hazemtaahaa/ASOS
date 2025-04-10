@@ -25,7 +25,9 @@ namespace ASOS.BL.DTOs
         
         public Section Section { get; set; }
         
+
         public DateTime? UpdatedAt { get; set; }
+
         
         public DateTime CreatedAt { get; set; }
         
@@ -35,7 +37,9 @@ namespace ASOS.BL.DTOs
         
         public string ProductTypeName { get; set; }
         
+
         public IEnumerable<string>? ImageUrls { get; set; } = new List<string>();
+
     }
 
     public class ProductCreateDTO

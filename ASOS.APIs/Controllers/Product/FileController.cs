@@ -8,6 +8,7 @@ namespace ASOS.APIs.Controllers.Product
     [ApiController]
     public class FileController : ControllerBase
     {
+
         //[HttpPost]
         //[Consumes("multipart/form-data")]
         //[ProducesResponseType(typeof(GeneralResult<string>), StatusCodes.Status200OK)]
@@ -56,5 +57,7 @@ namespace ASOS.APIs.Controllers.Product
         //    return Ok(new GeneralResult<string>() { Data = fileUrl, Success = true, Errors = [] });
         //    #endregion
         //}
+
+
     }
 }

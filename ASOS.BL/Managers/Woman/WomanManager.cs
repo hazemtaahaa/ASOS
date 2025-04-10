@@ -1,18 +1,22 @@
 ﻿using ASOS.BL.DTOs;
 using ASOS.DAL;
+
 using Microsoft.Extensions.Configuration;
+
 
 namespace ASOS.BL;
 
 public class WomanManager : IWomanManager
 {
     private readonly IUnitOfWork _unitOfWork;
+
     private readonly IConfiguration _configuration;
 
     public WomanManager(IUnitOfWork unitOfWork,IConfiguration configuration)
     {
         _unitOfWork = unitOfWork;
         _configuration = configuration;
+
     }
 
     public async Task<List<ProductDTO>> GetAllAsync()
@@ -30,12 +34,14 @@ public class WomanManager : IWomanManager
             Rate = (decimal)d.Rate,
             Quantity = (int)d.Quantity,
             Section = d.Section,
+
             UpdatedAt = d.UpdatedAt,
             CreatedAt = d.CreatedAt,
             BrandName = d.Brand?.Name ?? string.Empty,
             CategoryName = d.Category?.Name ?? string.Empty,
             ProductTypeName = d.ProductType?.Name ?? string.Empty,
             ImageUrls = d.ProductImages?.Select(i => $"{_configuration["ApiBaseUrl"]}{i.ImageUrl}").ToList() ?? new List<string>()
+            
         }).ToList();
     }
 
@@ -48,7 +54,9 @@ public class WomanManager : IWomanManager
         {
             Id = b.Id,
             Name = b.Name,
+
             BrandImage = $"{_configuration["ApiBaseUrl"]}{b.BrandImage}"
+
         }).ToList();
 
         return brandDTOs;
