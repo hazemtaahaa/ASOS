@@ -1,15 +1,18 @@
 using ASOS.BL.DTOs;
 using ASOS.DAL;
+using Microsoft.Extensions.Configuration;
 
 namespace ASOS.BL;
 
 public class MenManager : IMenManager
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IConfiguration _configuration;
 
-    public MenManager(IUnitOfWork unitOfWork)
+    public MenManager(IUnitOfWork unitOfWork,IConfiguration configuration)
     {
         _unitOfWork = unitOfWork;
+        _configuration = configuration;
     }
 
     public async Task<List<ProductDTO>> GetAllAsync()
@@ -27,12 +30,12 @@ public class MenManager : IMenManager
             Rate = (decimal)d.Rate,
             Quantity = (int)d.Quantity,
             Section = d.Section,
-            UpdatedAt = (DateTime)d.UpdatedAt,
+            UpdatedAt = d.UpdatedAt,
             CreatedAt = d.CreatedAt,
-            BrandName = d.Brand.Name,
-            CategoryName = d.Category.Name,
-            ProductTypeName = d.ProductType.Name,
-            ImageUrls = d.ProductImages.Select(i => i.ImageUrl).ToList()
+            BrandName = d.Brand?.Name ?? string.Empty,
+            CategoryName = d.Category?.Name ?? string.Empty,
+            ProductTypeName = d.ProductType?.Name ?? string.Empty,
+            ImageUrls = d.ProductImages?.Select(i => $"{_configuration["ApiBaseUrl"]}{i.ImageUrl}").ToList() ?? new List<string>()
         }).ToList();
     }
 }
