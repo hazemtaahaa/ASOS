@@ -66,5 +66,22 @@ namespace ASOS.APIs.Controllers.Cart
 
 			return TypedResults.Ok("Product removed from cart.");
 		}
+		///////////////////////////////////////////////////////////////////////////////////
+		[HttpDelete("products")]
+		public async Task<Results<Ok<string>, UnauthorizedHttpResult, NotFound>>
+			ClearAsync()
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (userId == null)
+			{
+				return TypedResults.Unauthorized();
+			}
+			var success=await _cartManager.ClearCartAsync(userId);
+			if (!success)
+			{
+				return TypedResults.NotFound();
+			}
+			return TypedResults.Ok("Cart has been cleared");
+		}
 	}
 }

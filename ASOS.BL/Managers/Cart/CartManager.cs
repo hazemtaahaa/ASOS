@@ -131,5 +131,23 @@ namespace ASOS.BL.Managers.Cart
 			await _unitOfWork.CompleteAsync();
 			return true;
 		}
+
+
+		/////////////////////////////////////////////////////////////////////
+		public async Task<bool> ClearCartAsync(string userId)
+		{
+			var user = await _userManager.Users
+			.Include(u => u.Cart)
+				.ThenInclude(c => c.CartItems)
+			.FirstOrDefaultAsync(u => u.Id == userId);
+
+			if (user == null || user.Cart == null)
+			{
+				return false;
+			}
+			user.Cart.CartItems.Clear();
+			await _unitOfWork.CompleteAsync();
+			return true;
+		}
 	}
 }

@@ -8,5 +8,6 @@ namespace ASOS.BL.Managers.Cart
 		Task<bool> AddToCartAsync(string userId, Guid productId);
 
 		Task<bool> RemoveFromCartAsync(string userId, Guid productId);
+		Task<bool> ClearCartAsync(string userId);
 	}
 }
