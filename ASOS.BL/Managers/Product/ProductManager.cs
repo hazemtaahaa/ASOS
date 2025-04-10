@@ -1,6 +1,9 @@
 ﻿using ASOS.BL.DTOs;
 using ASOS.DAL;
 
+using Microsoft.Extensions.Configuration;
+
+
 
 namespace ASOS.BL.Managers.Product
 {
@@ -8,9 +11,13 @@ namespace ASOS.BL.Managers.Product
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public ProductManager(IUnitOfWork unitOfWork)
+        private readonly IConfiguration _configuration;
+
+        public ProductManager(IUnitOfWork unitOfWork,IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
+            _configuration = configuration;
+
         }
 
         public async Task<ProductDTO> CreateAsync(ProductCreateDTO product)
@@ -26,7 +33,9 @@ namespace ASOS.BL.Managers.Product
                 CategoryId = product.CategoryId,
                 ProductTypeId = product.ProductTypeId,
             };
-             _unitOfWork.Products.AddAsync(productDb);
+
+            await _unitOfWork.Products.AddAsync(productDb);
+
             await _unitOfWork.CompleteAsync();
 
             return new ProductDTO
@@ -56,7 +65,12 @@ namespace ASOS.BL.Managers.Product
 
         public async Task<List<ProductDTO>> GetAllAsync()
         {
-            var products= await _unitOfWork.Products.GetAllProductAsync();
+            var products = await _unitOfWork.Products.GetAllProductAsync();
+            //foreach (var product in products)
+            //{
+            //    Console.WriteLine(product.ProductImages.FirstOrDefault()?.ImageUrl);
+            //}
+
 
             return products.Select(d => new ProductDTO
             {
@@ -67,12 +81,13 @@ namespace ASOS.BL.Managers.Product
                 Rate = (decimal)d.Rate,
                 Quantity = (int)d.Quantity,
                 Section = d.Section,
-                UpdatedAt = (DateTime)d.UpdatedAt,
+
+                UpdatedAt = d.UpdatedAt,
                 CreatedAt = d.CreatedAt,
-                BrandName = d.Brand.Name,
-                CategoryName = d.Category.Name,
-                ProductTypeName = d.ProductType.Name,
-                ImageUrls = d.ProductImages.Select(i => i.ImageUrl).ToList()
+                BrandName = d.Brand?.Name ?? string.Empty,
+                CategoryName = d.Category?.Name ?? string.Empty,
+                ProductTypeName = d.ProductType?.Name ?? string.Empty,
+                ImageUrls = d.ProductImages?.Select(i => $"{_configuration["ApiBaseUrl"]}{i.ImageUrl}").ToList() ?? new List<string>()
             }).ToList();
 
         }
@@ -94,7 +109,9 @@ namespace ASOS.BL.Managers.Product
                 BrandName = product.Brand.Name,
                 CategoryName = product.Category.Name,
                 ProductTypeName = product.ProductType.Name,
-                ImageUrls = product.ProductImages.Select(i => i.ImageUrl).ToList()
+
+                ImageUrls = product.ProductImages.Select(i => $"{_configuration["ApiBaseUrl"]}{i.ImageUrl}").ToList()
+
             };
         }
 

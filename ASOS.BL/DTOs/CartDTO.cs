@@ -7,7 +7,13 @@ namespace ASOS.BL.DTOs
         public Guid Id { get; set; }
         
         public string UserId { get; set; }
-        
+
+
+        public string? PaymentIntentId { get; set; }
+
+        public string? ClientSecrete { get; set; } 
+
+
         public ICollection<CartItemDTO> CartItems { get; set; } = new List<CartItemDTO>();
         
         public decimal TotalAmount { get; set; }
