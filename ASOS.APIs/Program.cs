@@ -1,9 +1,9 @@
-
 using System.Text;
 using ASOS.DAL;
 using ASOS.DAL.Context;
 using ASOS.DAL.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,12 +16,11 @@ namespace ASOS.APIs
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
 
-            //builder.Services.AddDbContext<StoreContext>(o => o.UseSqlServer(
-            //    builder.Configuration.GetConnectionString("Default")
-            //));
+            builder.Services.AddDbContext<StoreContext>(o => o.UseSqlServer(
+                builder.Configuration.GetConnectionString("Default")
+            ));
             builder.Services.AddDataAccessServices(builder.Configuration);
 
             builder.Services.AddBusinessServices(builder.Configuration);
@@ -63,14 +62,21 @@ namespace ASOS.APIs
             var app = builder.Build();
 
             #region Images
+            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images");
+            if (!Directory.Exists(imagePath))
+            {
+                Directory.CreateDirectory(imagePath);
+            }
 
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), "Images")),
-                RequestPath = "/Images"
+                FileProvider = new PhysicalFileProvider(imagePath),
+                RequestPath = "/Images",
+                ContentTypeProvider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider
+                {
+                    Mappings = { [".avif"] = "image/avif" }
+                }
             });
-
             #endregion
 
             // Configure the HTTP request pipeline.
@@ -84,7 +90,6 @@ namespace ASOS.APIs
 
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
