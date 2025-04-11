@@ -34,7 +34,7 @@ public class UserController:ControllerBase
 	public async Task<Results<Ok<TokenDto>, UnauthorizedHttpResult>>
 			Login(LoginCredentials credentials)
 	{
-		var user = await _userManager.FindByNameAsync(credentials.UserName);
+		var user = await _userManager.FindByEmailAsync(credentials.Email);
 		if (user == null)
 		{
 			return TypedResults.Unauthorized();
