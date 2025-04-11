@@ -170,5 +170,20 @@ namespace ASOS.APIs.Controllers.Men
 
             return Ok(new GeneralResult<List<ProductDTO>>() { Data = productsByCategory, Success = true, Errors = [] });
         }
+
+        [HttpGet("brands")]
+        public async Task<IActionResult> GetWomanBrands()
+        {
+            var brands = await _menManager.GetAllBrandsAsync();
+            return Ok(new GeneralResult<List<BrandDTO>>() { Data = brands, Success = true, Errors = [] });
+        }
+
+        [HttpGet("{brand}")]
+        public async Task<IActionResult> GetProductsByBrand(string brand)
+        {
+            var products = await _menManager.GetAllAsync();
+            var productsByBrand = products.Where(p => p.BrandName == brand).ToList();
+            return Ok(new GeneralResult<List<ProductDTO>>() { Data = productsByBrand, Success = true, Errors = [] });
+        }
     }
 } 

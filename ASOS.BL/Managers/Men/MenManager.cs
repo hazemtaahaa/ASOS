@@ -44,4 +44,21 @@ public class MenManager : IMenManager
 
         }).ToList();
     }
+
+    public async Task<List<BrandDTO>> GetAllBrandsAsync()
+    {
+        var productFromDB = await _unitOfWork.Products.GetAllProductAsync();
+        var menProducts = productFromDB.Where(p => p.Section == Section.Male);
+        var brands = menProducts.Select(p => p.Brand).Distinct().ToList();
+        var brandDTOs = brands.Select(b => new BrandDTO
+        {
+            Id = b.Id,
+            Name = b.Name,
+
+            BrandImage = $"{_configuration["ApiBaseUrl"]}{b.BrandImage}"
+
+        }).ToList();
+
+        return brandDTOs;
+    }
 }
