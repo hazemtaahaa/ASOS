@@ -66,5 +66,40 @@ namespace ASOS.APIs.Controllers.Cart
 
 			return TypedResults.Ok("Product removed from cart.");
 		}
+		///////////////////////////////////////////////////////////////////////////////////
+		[HttpDelete("products")]
+		public async Task<Results<Ok<string>, UnauthorizedHttpResult, NotFound>>
+			ClearAsync()
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (userId == null)
+			{
+				return TypedResults.Unauthorized();
+			}
+			var success=await _cartManager.ClearCartAsync(userId);
+			if (!success)
+			{
+				return TypedResults.NotFound();
+			}
+			return TypedResults.Ok("Cart has been cleared");
+		}
+		///////////////////////////////////////////////////////////////////////////////////
+		[HttpPut("products/{productId}/{quantity}")]
+		public async Task<Results<Ok<string>, UnauthorizedHttpResult, NotFound>>
+			UpdateQuantityAsync(Guid productId,int quantity)
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (userId == null)
+			{
+				return TypedResults.Unauthorized();
+			}
+			var success=await _cartManager
+				.UpdateCartProductQuantityAsync(userId, quantity,productId);
+			if (!success)
+			{
+				return TypedResults.NotFound();
+			}
+			return TypedResults.Ok("Quantity updated");
+		}
 	}
 }

@@ -3,6 +3,7 @@ using ASOS.BL.Managers.Cart;
 using ASOS.BL.Managers.Category;
 using ASOS.BL.Managers.Product;
 using ASOS.BL.Managers.WishList;
+using ASOS.BL.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,5 +21,6 @@ public static class BusinessExtensions
         services.AddScoped<IProductManager, ProductManager>();
         services.AddScoped<IWishListManager, WishListManager>();
         services.AddScoped<ICartManager,CartManager>();
+        services.AddScoped<IEmailService, EmailService>();
     }
 }

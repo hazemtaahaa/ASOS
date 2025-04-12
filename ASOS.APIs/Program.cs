@@ -1,4 +1,5 @@
 using System.Text;
+using ASOS.BL.Services;
 using ASOS.DAL;
 using ASOS.DAL.Context;
 using ASOS.DAL.Models;
@@ -15,15 +16,16 @@ namespace ASOS.APIs
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddControllers();
 
             builder.Services.AddDbContext<StoreContext>(o => o.UseSqlServer(
                 builder.Configuration.GetConnectionString("Default")
             ));
+			
+			// Add services to the container.
             builder.Services.AddDataAccessServices(builder.Configuration);
-
-            builder.Services.AddBusinessServices(builder.Configuration);
+			
+			builder.Services.AddBusinessServices(builder.Configuration);
+			builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

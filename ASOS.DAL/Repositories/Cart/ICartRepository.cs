@@ -5,4 +5,5 @@ namespace ASOS.DAL;
 
 public interface ICartRepository : IGenericRepository<Cart>
 {
+	
 }

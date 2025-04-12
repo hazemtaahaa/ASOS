@@ -23,9 +23,9 @@ namespace ASOS.DAL.Context
         public DbSet<Payment> Payments { get; set; }
         public DbSet<WishListProduct> WishListProducts { get; set; }
         public DbSet<Cart> Carts { get; set; }
-        
+		public DbSet<VerificationCode> VerificationCodes { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 

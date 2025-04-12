@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ASOS.BL.Validators
+﻿namespace ASOS.BL.Validators
 {
-    internal class Test
+	internal class Test
     {
     }
 }

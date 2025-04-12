@@ -19,7 +19,7 @@ public interface IUnitOfWork : IDisposable
     IUserOrderPaymentRepository UserOrderPayments { get; }
     IWishListRepository WishLists { get; }
     IWishListProductRepository WishListProducts { get; }
-
+    IVerificationCodeRepository VerificationCodes { get; }
     Task<int> CompleteAsync();
  
 }
