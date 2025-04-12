@@ -20,11 +20,13 @@ namespace ASOS.APIs.Controllers.Men
             _categoryManager = categoryManager;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("products/{pageNumber}")]
+        public async Task<IActionResult> GetAll(int pageNumber)
         {
+            pageNumber = pageNumber < 1 ? 1 : pageNumber;
             var products = await _menManager.GetAllAsync();
-            return Ok(new GeneralResult<List<ProductDTO>>() { Data = products, Success = true, Errors = [] });
+            var paginatedProducts = products.OrderBy(p => p.CreatedAt).Skip((pageNumber - 1) * 20).Take(20).ToList();
+            return Ok(new GeneralResult<List<ProductDTO>>() { Data = paginatedProducts, Success = true, Errors = [] });
         }
 
         [HttpGet("newin")]

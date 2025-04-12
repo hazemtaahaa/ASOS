@@ -61,6 +61,19 @@ namespace ASOS.APIs
                 });
             #endregion
 
+            // Add CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularApp",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200")
+                               .AllowAnyMethod()
+                               .AllowAnyHeader()
+                               .AllowCredentials();
+                    });
+            });
+
             var app = builder.Build();
 
             #region Images
@@ -89,6 +102,9 @@ namespace ASOS.APIs
             }
             //Last Update From Hazem..
             app.UseHttpsRedirection();
+
+            // Use CORS before other middleware
+            app.UseCors("AllowAngularApp");
 
             app.UseAuthentication();
             app.UseAuthorization();
