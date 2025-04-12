@@ -11,7 +11,7 @@ namespace ASOS.BL.DTOs
 
         public string? PaymentIntentId { get; set; }
 
-        public string? ClientSecrete { get; set; } 
+        public string? ClientSecret { get; set; } 
 
 
         public ICollection<CartItemDTO> CartItems { get; set; } = new List<CartItemDTO>();
