@@ -23,7 +23,7 @@ namespace ASOS.APIs.Controllers.Woman
         {
             pageNumber = pageNumber < 1 ? 1 : pageNumber;
             var products = await _womanManager.GetAllAsync();
-            var paginatedProducts = products.Skip((pageNumber - 1) * 20).Take(20).ToList();
+            var paginatedProducts = products.OrderBy(p => p.CreatedAt).Skip((pageNumber - 1) * 20).Take(20).ToList();
             return Ok(new GeneralResult<List<ProductDTO>>() { Data = paginatedProducts, Success = true, Errors = [] });
         }
 
