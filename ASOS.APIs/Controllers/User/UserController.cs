@@ -1,15 +1,21 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Numerics;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using ASOS.BL.DTOs.User;
 using ASOS.BL.DTOs.UserDto;
+using ASOS.BL.Services;
 using ASOS.DAL;
 using ASOS.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Utilities.Collections;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 namespace ASOS.APIs.Controllers;
 
 [ApiController]
@@ -19,14 +25,17 @@ public class UserController:ControllerBase
 	private readonly IConfiguration _configuration;
 	private readonly UserManager<User> _userManager;
 	private readonly IUnitOfWork _unitOfWork;
+	private readonly IEmailService _emailService;
 
 	public UserController(IConfiguration configuration,
 		UserManager<User> userManager
-		,IUnitOfWork unitOfWork)
+		,IUnitOfWork unitOfWork
+		,IEmailService emailService)
 	{
 		_configuration= configuration;
 		_userManager= userManager;
 		_unitOfWork= unitOfWork;
+		_emailService= emailService;
 	}
 
 	[HttpPost]
@@ -127,10 +136,12 @@ public class UserController:ControllerBase
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	
-	[HttpGet("{id}")]
-	public async Task<Results<Ok<UserInfoDto>,NotFound>>GetById(string id)
+	[HttpGet("logged-user")]
+	[Authorize]
+	public async Task<Results<Ok<UserInfoDto>,NotFound>>GetLoggedUserAsync()
 	{
-		var user=await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		var user=await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
 		if(user == null)
 		{
 			return TypedResults.NotFound();
@@ -147,11 +158,84 @@ public class UserController:ControllerBase
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
-
+	[HttpPost("forget-password")]
 	
+	public async Task<Results<Ok<string>,NotFound>>ForgetPassword(string email)
+	{
+		var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
+		if (user == null)
+		{
+			return TypedResults.NotFound();
+		}
+		var random = new Random();
+		string code = random.Next(100000, 1000000).ToString();
+		var verification = new VerificationCode
+		{
+			Id = Guid.NewGuid(),
+			UserId = user.Id,
+			Code = code,
+			Expiration = DateTime.UtcNow.AddMinutes(10)
+		};
+		await _unitOfWork.VerificationCodes.AddAsync(verification);
+		await _unitOfWork.CompleteAsync();
+		await _emailService.SendEmailAsync(email
+		, "Your Password Reset Code (valid for 10 minutes)"
+		, $"To reset your password.\nSubmit this reset password code: {code} If you did not request a change of password, please ignore this email!");
+		return TypedResults.Ok("Email sent successfully.");
+	}
+	/////////////////////////////////////////////////////////////////////////////////////
+	[HttpPost("verify")]
+	public async Task<Results<Ok<TokenDto>, NotFound>>
+		VerifyCodeAsync(string code, string email)
+	{
+		var verificationCodes = await _unitOfWork.VerificationCodes.GetAllAsync();
+		var expiredCodes = verificationCodes.Where(vc => vc.Expiration < DateTime.UtcNow);
+		_unitOfWork.VerificationCodes.DeleteRange(expiredCodes);
+		await _unitOfWork.CompleteAsync();
 
-	
+		var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
+		if (user == null)
+		{
+			return TypedResults.NotFound();
+		}
 
-	
+		var vc = verificationCodes.LastOrDefault(vc => vc.UserId == user.Id);
+		if (vc == null)
+		{
+			return TypedResults.NotFound();
+		}
 
+		if (vc.Code != code)
+		{
+			return TypedResults.NotFound();
+		}
+		_unitOfWork.VerificationCodes.Delete(vc);
+		await _unitOfWork.CompleteAsync();
+		var claims = await _userManager.GetClaimsAsync(user);
+		var tokenDto = GenerateTokenAsync(claims.ToList());
+		return TypedResults.Ok(tokenDto);
+	}
+	/////////////////////////////////////////////////////////////////////////////////////
+	[Authorize]
+	[HttpPost("reset-password")]
+	public async Task<Results<Ok<string>, NotFound>>
+		ResetPasswordAsync([FromBody]string newPassword)
+	{
+		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+		if (user == null)
+		{
+			return TypedResults.NotFound();
+		}
+		await _userManager.RemovePasswordAsync(user);
+		var result= await _userManager.AddPasswordAsync(user, newPassword);
+
+		if (!result.Succeeded)
+		{
+			return TypedResults.Ok("Failed to set new password.");
+		}
+		
+
+		return TypedResults.Ok("Password reset successfully.");
+	}
 }

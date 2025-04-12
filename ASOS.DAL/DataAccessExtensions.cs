@@ -29,6 +29,7 @@ public static class DataAccessExtensions
         services.AddScoped<IUserOrderPaymentRepository, UserOrderPaymentRepository>();
         services.AddScoped<IWishListRepository, WishListRepository>();
         services.AddScoped<IWishListProductRepository, WishListProductRepository>();
+        services.AddScoped<IVerificationCodeRepository, VerificationCodeRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
