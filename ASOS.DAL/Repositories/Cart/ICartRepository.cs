@@ -5,5 +5,5 @@ namespace ASOS.DAL;
 
 public interface ICartRepository : IGenericRepository<Cart>
 {
-	
+	Task<Cart> GetCartByIdAsync(Guid id);
 }
