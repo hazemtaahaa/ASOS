@@ -35,5 +35,16 @@ namespace ASOS.APIs.Controllers.Product
             var products = await _productManager.GetAllAsync();
             return Ok(new GeneralResult<List<ProductDTO>>() { Data = products, Success = true, Errors = [] });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct([FromBody] ProductCreateDTO product)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new GeneralResult() { Success = false, Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => new ResultError() { Message = e.ErrorMessage }).ToArray() });
+            }
+            var createdProduct = await _productManager.CreateAsync(product);
+            return CreatedAtAction(nameof(GetProductById), new { id = createdProduct.Id }, new GeneralResult<ProductDTO>() { Data = createdProduct, Success = true, Errors = [] });
+        }
     }
 }

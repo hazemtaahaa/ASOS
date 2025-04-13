@@ -14,6 +14,6 @@ namespace ASOS.DAL.Models
 
         public int? Quantity { get; set; }
 
-        public decimal? TotalPrice  => Product?.Price ?? 0 * Quantity;
+        public decimal? TotalPrice { get; set; }
     }
 }

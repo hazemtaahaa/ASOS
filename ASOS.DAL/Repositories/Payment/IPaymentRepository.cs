@@ -5,4 +5,8 @@ namespace ASOS.DAL;
 
 public interface IPaymentRepository : IGenericRepository<Payment>
 {
+
+   
+    Task<Payment> GetPaymentById(string PaymentIntent);
+  
 }
