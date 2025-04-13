@@ -4,6 +4,6 @@ namespace ASOS.BL.Managers.Payment
 {
     public interface IPaymentManager
     {
-        Task<CartDTO> CreateOrUpdatePaymentIntent(Guid cartId);
+        Task<bool> UpdatePaymentIntent(string PaymentIntent);
     }
 }

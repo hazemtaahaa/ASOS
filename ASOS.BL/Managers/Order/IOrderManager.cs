@@ -6,7 +6,9 @@ namespace ASOS.BL.Managers.Order
     {
         Task<bool> CreateOrderAsync(Guid cartId, string address, string phoneNumber);
         Task<bool> CancelOrderAsync( Guid orderId);
-        Task<bool> CompleteOrderAsync(string userId, Guid orderId);
+
+        Task<object> CompleteOrderPaymentAsync( Guid orderId);
+
         Task<List<OrderDTO>> GetUserOrdersAsync(string userId);
         Task<OrderDTO> GetOrderByIdAsync(Guid orderId);
     }
