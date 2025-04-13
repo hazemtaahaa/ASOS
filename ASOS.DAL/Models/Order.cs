@@ -12,6 +12,10 @@
 
         public OrderStatus Status { get; set; }
 
+        public string? Address { get; set; }
+
+        public string? PhoneNumber { get; set; }
+
         public UserOrderPayment? UserOrderPayment { get; set; } 
 
         public ICollection<OrderItem> OrderItems { get; set; } = new HashSet<OrderItem>();
