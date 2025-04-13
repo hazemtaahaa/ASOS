@@ -43,7 +43,6 @@ namespace ASOS.BL.DTOs
 
     public class OrderItemDTO
     {
-        public Guid Id { get; set; }
 
         public Guid ProductId { get; set; }
 
