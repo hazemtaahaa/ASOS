@@ -4,6 +4,9 @@ using ASOS.BL.Managers.Order;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
+using Stripe.Events;
+using Stripe.Checkout;
 
 namespace ASOS.APIs.Controllers.Order
 {
@@ -41,16 +44,14 @@ namespace ASOS.APIs.Controllers.Order
             return BadRequest(new { message = "Failed to cancel order." });
         }
 
-        //[HttpPost("complete")]
-        //public async Task<IActionResult> CompleteOrder([FromQuery] string userId, [FromQuery] Guid orderId)
-        //{
-        //    var result = await _orderManager.CompleteOrderAsync(userId, orderId);
-        //    if (result)
-        //    {
-        //        return Ok(new { message = "Order completed successfully." });
-        //    }
-        //    return BadRequest(new { message = "Failed to complete order." });
-        //}
+        [HttpPost("complete")]
+        public async Task<IActionResult> CompleteOrder([FromQuery] Guid orderId)
+        {
+            var ClientSecret = await _orderManager.CompleteOrderPaymentAsync( orderId);
+            
+           return Ok(new GeneralResult<string> (){ Errors = [], Success = true, Data = (string)ClientSecret });
+            return BadRequest(new { message = "Failed to complete order." });
+        }
 
         [HttpGet("user-orders")]
         public async Task<IActionResult> GetUserOrders([FromQuery] string userId)
@@ -73,6 +74,9 @@ namespace ASOS.APIs.Controllers.Order
             }
             return NotFound(new GeneralResult() { Errors = [new ResultError() { Message = "Order not found" }], Success = false });
         }
+
+
+        
 
     }
 }
