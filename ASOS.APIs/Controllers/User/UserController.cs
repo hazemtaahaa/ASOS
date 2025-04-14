@@ -68,7 +68,7 @@ public class UserController:ControllerBase
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	[HttpPost]
 	[Route("register")]
-	public async Task<Results<NoContent, BadRequest<List<string>>>>
+	public async Task<IActionResult>
 			Register(RegisterDto registerDto)
 	{
 		var user = new User
@@ -82,7 +82,11 @@ public class UserController:ControllerBase
 			var errors = creationResult.Errors
 				.Select(e => e.Description)
 				.ToList();
-			return BadRequest(errors);
+			return BadRequest(new {
+				statusMsg= "fail",
+				message= "Account Already Exists",
+				errorList = errors
+			});
 		}
 
 		var claims = new List<Claim>
@@ -104,7 +108,7 @@ public class UserController:ControllerBase
 		await _unitOfWork.WishLists.AddAsync(wishList);
 		await _unitOfWork.Carts.AddAsync(cart);
 		await _unitOfWork.CompleteAsync();
-		return TypedResults.NoContent();
+		return Ok(new {message= "success" });
 	}
 
 
