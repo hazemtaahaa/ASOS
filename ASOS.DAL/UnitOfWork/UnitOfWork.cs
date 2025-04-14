@@ -20,7 +20,7 @@ public class UnitOfWork : IUnitOfWork
     public IUserOrderPaymentRepository UserOrderPayments { get; }
     public IWishListRepository WishLists { get; }
     public IWishListProductRepository WishListProducts { get; }
-
+    public IVerificationCodeRepository VerificationCodes { get; }  
     public UnitOfWork(StoreContext context)
     {
         _context = context;
@@ -38,7 +38,9 @@ public class UnitOfWork : IUnitOfWork
         UserOrderPayments = new UserOrderPaymentRepository(context);
         WishLists = new WishListRepository(context);
         WishListProducts = new WishListProductRepository(context);
-    }
+		VerificationCodes=new VerificationCodeRepository(context);
+
+	}
 
     public async Task<int> CompleteAsync() => await _context.SaveChangesAsync();
 

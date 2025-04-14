@@ -131,5 +131,47 @@ namespace ASOS.BL.Managers.Cart
 			await _unitOfWork.CompleteAsync();
 			return true;
 		}
+
+
+		/////////////////////////////////////////////////////////////////////
+		public async Task<bool> ClearCartAsync(string userId)
+		{
+			var user = await _userManager.Users
+			.Include(u => u.Cart)
+				.ThenInclude(c => c.CartItems)
+			.FirstOrDefaultAsync(u => u.Id == userId);
+
+			if (user == null || user.Cart == null)
+			{
+				return false;
+			}
+			user.Cart.CartItems.Clear();
+			await _unitOfWork.CompleteAsync();
+			return true;
+		}
+		/////////////////////////////////////////////////////////////////////
+		public async Task<bool> UpdateCartProductQuantityAsync(string userId, int quantity, Guid productId)
+		{
+			var user = await _userManager.Users
+				.Include(u => u.Cart)
+				.ThenInclude(c => c.CartItems)
+				.FirstOrDefaultAsync(u => u.Id == userId);
+
+			if (user == null)
+			{
+				return false;
+			}
+			var alreadyExists = user.Cart.CartItems
+				.Any(ci => ci.ProductId == productId);
+
+			if (!alreadyExists)
+			{
+				return false ;
+			}
+			user.Cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId)
+					.Quantity=quantity;
+			await _unitOfWork.CompleteAsync();
+			return true;
+		}
 	}
 }
