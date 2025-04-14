@@ -61,7 +61,7 @@ public class UserController:ControllerBase
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	[HttpPost]
 	[Route("register")]
-	public async Task<Results<NoContent, BadRequest<List<string>>>>
+	public async Task<Results<Ok<string>, BadRequest<List<string>>>>
 			Register(RegisterDto registerDto)
 	{
 		var user = new User
@@ -97,7 +97,7 @@ public class UserController:ControllerBase
 		await _unitOfWork.WishLists.AddAsync(wishList);
 		await _unitOfWork.Carts.AddAsync(cart);
 		await _unitOfWork.CompleteAsync();
-		return TypedResults.NoContent();
+		return TypedResults.Ok("success");
 	}
 
 
