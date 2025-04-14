@@ -49,21 +49,20 @@ namespace ASOS.BL.Managers.Order
             };
 
 
-            var orderItems = new List<OrderItem>();
-
             foreach (var item in cart.CartItems)
             {
                 var product = await _unitOfWork.Products.GetByIdAsync(item.ProductId);
                 if (product == null) return false;
-                orderItems.Add(new OrderItem
+                var orderItem =new OrderItem
                 {
                     ProductId = item.ProductId,
                     OrderId = order.Id,
                     Quantity = item.Quantity,
                     TotalPrice = product.Price * item.Quantity,
-                });
-            }
+                };
+                await _unitOfWork.OrderItems.AddAsync(orderItem);
 
+            }
             // add new order 
             await _unitOfWork.Orders.AddAsync(order);
 
@@ -163,9 +162,12 @@ namespace ASOS.BL.Managers.Order
             payment.StripPaymentId = paymentIntent.Id;
 
             
-                payment.Status = PaymentStatus.Approved;
+            payment.Status = PaymentStatus.Approved;
+            payment.PaymentMethod = DAL.PaymentMethod.Card;
+            _unitOfWork.Payments.Update(payment);
+            await _unitOfWork.CompleteAsync();
 
-                return paymentIntent.ClientSecret;
+            return paymentIntent.ClientSecret;
              
 
         }

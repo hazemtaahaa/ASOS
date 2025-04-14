@@ -1,6 +1,7 @@
 ﻿using ASOS.BL;
 using ASOS.BL.Managers.Cart;
 using ASOS.BL.Managers.Category;
+using ASOS.BL.Managers.Order;
 using ASOS.BL.Managers.Payment;
 using ASOS.BL.Managers.Product;
 using ASOS.BL.Managers.WishList;
@@ -25,5 +26,7 @@ public static class BusinessExtensions
         services.AddScoped<IEmailService, EmailService>();
 
         services.AddScoped<IPaymentManager, PaymentManager>();
+
+        services.AddScoped<IOrderManager, OrderManager>();
     }
 }
