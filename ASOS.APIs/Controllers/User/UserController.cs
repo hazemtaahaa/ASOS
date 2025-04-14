@@ -40,28 +40,35 @@ public class UserController:ControllerBase
 
 	[HttpPost]
 	[Route("login")]
-	public async Task<Results<Ok<TokenDto>, UnauthorizedHttpResult>>
-			Login(LoginCredentials credentials)
+	public async Task<IActionResult> Login(LoginCredentials credentials)
 	{
 		var user = await _userManager.FindByEmailAsync(credentials.Email);
 		if (user == null)
 		{
-			return TypedResults.Unauthorized();
+			return Unauthorized(new
+            {
+                statusMsg = "fail",
+                message = "Incorrect email or password"
+            });
 		}
 		var isPasswordValid = await _userManager.CheckPasswordAsync(user, credentials.Password);
 		if (!isPasswordValid)
 		{
-			return TypedResults.Unauthorized();
+			return Unauthorized(new
+            {
+                statusMsg = "fail",
+                message = "Incorrect email or password"
+            });
 		}
 		var claims = await _userManager.GetClaimsAsync(user);
 		var tokenDto = GenerateTokenAsync(claims.ToList());
 
-		return TypedResults.Ok(tokenDto);
+		return Ok(new { message = "success", token = tokenDto });
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	[HttpPost]
 	[Route("register")]
-	public async Task<Results<Ok<string>, BadRequest<List<string>>>>
+	public async Task<Results<NoContent, BadRequest<List<string>>>>
 			Register(RegisterDto registerDto)
 	{
 		var user = new User
@@ -75,7 +82,7 @@ public class UserController:ControllerBase
 			var errors = creationResult.Errors
 				.Select(e => e.Description)
 				.ToList();
-			return TypedResults.BadRequest(errors);
+			return BadRequest(errors);
 		}
 
 		var claims = new List<Claim>
@@ -97,7 +104,7 @@ public class UserController:ControllerBase
 		await _unitOfWork.WishLists.AddAsync(wishList);
 		await _unitOfWork.Carts.AddAsync(cart);
 		await _unitOfWork.CompleteAsync();
-		return TypedResults.Ok("success");
+		return TypedResults.NoContent();
 	}
 
 
