@@ -8,7 +8,6 @@ namespace ASOS.APIs.Controllers.Order
     [Route("api/[controller]")]
     [ApiController]
     public class WebhookController : ControllerBase
-
     {
         private readonly IPaymentManager _paymentManager;
         public WebhookController(IPaymentManager paymentManager)
@@ -19,8 +18,12 @@ namespace ASOS.APIs.Controllers.Order
         [HttpPost]
         public async Task<IActionResult> Post()
         {
+            // Enable buffering to allow multiple reads of the request body
+            Request.EnableBuffering();
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-            const string webhookSecret = "whsec_..."; // Get from Stripe CLI or dashboard
+            HttpContext.Request.Body.Position = 0; // Reset position after reading
+
+            const string webhookSecret = "whsec_c3e2dc065ff33fcae80fa44e226b5c5a602b7e2399000faae119b01d8a05e9db"; // Get from Stripe CLI or dashboard
 
             try
             {

@@ -10,7 +10,7 @@
 
         public PaymentMethod? PaymentMethod { get; set; }
 
-        public String? StripPaymentId { get; set; }
+        public string? StripPaymentId { get; set; }
 
         public decimal? Amount { get; set; }
 

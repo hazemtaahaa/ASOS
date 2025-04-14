@@ -2,11 +2,7 @@
 using ASOS.BL.DTOs.Common;
 using ASOS.BL.Managers.Order;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Stripe;
-using Stripe.Events;
-using Stripe.Checkout;
 
 namespace ASOS.APIs.Controllers.Order
 {
