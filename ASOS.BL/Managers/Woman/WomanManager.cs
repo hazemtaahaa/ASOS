@@ -34,7 +34,6 @@ public class WomanManager : IWomanManager
             Rate = (decimal)d.Rate,
             Quantity = (int)d.Quantity,
             Section = d.Section,
-
             UpdatedAt = d.UpdatedAt,
             CreatedAt = d.CreatedAt,
             BrandName = d.Brand?.Name ?? string.Empty,
