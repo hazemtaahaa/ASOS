@@ -93,24 +93,24 @@ namespace ASOS.BL.Managers.Product
         }
         public async Task<ProductDTO> GetByIdAsync(Guid Id)
         {
-            var product= await _unitOfWork.Products.GetProductById(Id);
+            var d= await _unitOfWork.Products.GetProductById(Id);
 
             return  new ProductDTO
             {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                Price = (decimal)product.Price,
-                Rate = (decimal)product.Rate,
-                Quantity = (int)product.Quantity,
-                Section = product.Section,
-                UpdatedAt = (DateTime)product.UpdatedAt,
-                CreatedAt = product.CreatedAt,
-                BrandName = product.Brand.Name,
-                CategoryName = product.Category.Name,
-                ProductTypeName = product.ProductType.Name,
+                Id = d.Id,
+                Name = d.Name,
+                Description = d.Description,
+                Price = (decimal)d.Price,
+                Rate = (decimal)d.Rate,
+                Quantity = (int)d.Quantity,
+                Section = d.Section,
 
-                ImageUrls = product.ProductImages.Select(i => $"{_configuration["ApiBaseUrl"]}{i.ImageUrl}").ToList()
+                UpdatedAt = d.UpdatedAt,
+                CreatedAt = d.CreatedAt,
+                BrandName = d.Brand?.Name ?? string.Empty,
+                CategoryName = d.Category?.Name ?? string.Empty,
+                ProductTypeName = d.ProductType?.Name ?? string.Empty,
+                ImageUrls = d.ProductImages?.Select(i => $"{_configuration["ApiBaseUrl"]}{i.ImageUrl}").ToList() ?? new List<string>()
 
             };
         }
