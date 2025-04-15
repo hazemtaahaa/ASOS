@@ -4,6 +4,7 @@ using ASOS.DAL;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ASOS.BL.DTOs;
+using Microsoft.Extensions.Configuration;
 
 namespace ASOS.BL.Managers.WishList
 {
@@ -12,14 +13,17 @@ namespace ASOS.BL.Managers.WishList
 		private readonly UserManager<User> _userManager;
 		private readonly IProductManager _productManager;
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly IConfiguration _configuration;
 
 		public WishListManager(UserManager<User> userManager
 			, IProductManager productManager
-			, IUnitOfWork unitOfWork)
+			, IUnitOfWork unitOfWork
+			,IConfiguration configuration)
 		{
 			_userManager=userManager;
 			_productManager=productManager;
 			_unitOfWork=unitOfWork;
+			_configuration=configuration;
 		}
 
 
@@ -58,12 +62,13 @@ namespace ASOS.BL.Managers.WishList
 				Rate = (decimal)p.Rate,
 				Quantity = (int)p.Quantity,
 				Section = p.Section,
-				UpdatedAt = (DateTime)p.UpdatedAt,
+
+				UpdatedAt = p.UpdatedAt,
 				CreatedAt = p.CreatedAt,
-				BrandName = p.Brand.Name,
-				CategoryName = p.Category.Name,
-				ProductTypeName = p.ProductType.Name,
-				ImageUrls = p.ProductImages.Select(i => i.ImageUrl).ToList()
+				BrandName = p.Brand?.Name ?? string.Empty,
+				CategoryName = p.Category?.Name ?? string.Empty,
+				ProductTypeName = p.ProductType?.Name ?? string.Empty,
+				ImageUrls = p.ProductImages?.Select(i => $"{_configuration["ApiBaseUrl"]}{i.ImageUrl}").ToList() ?? new List<string>()
 			}).ToList();
 			return productsDto;
 		}
