@@ -120,7 +120,7 @@ public class UserController:ControllerBase
 		var key = new SymmetricSecurityKey(secretKeyInBytes);
 
 		var token = new JwtSecurityToken(
-			expires: DateTime.Now.AddHours(1),
+			expires: DateTime.Now.AddDays(2),
 			claims: claims,
 			signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
 			);
