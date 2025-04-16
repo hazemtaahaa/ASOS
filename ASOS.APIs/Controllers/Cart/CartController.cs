@@ -34,6 +34,7 @@ namespace ASOS.APIs.Controllers.Cart
 				.Include(u => u.Cart)
 				.ThenInclude(c => c.CartItems)
 				.FirstOrDefaultAsync(u => u.Id == userId);
+			var cartId=user.Cart.Id;
 			var products = await _cartManager.GetUserCartAsync(userId);
 			var productsInCart= products.Select(p => new ProductInCartDto
 			{
@@ -58,7 +59,7 @@ namespace ASOS.APIs.Controllers.Cart
 			{
 				totalPrice += (item.Price*item.QuantityInCart);
 			}
-			return TypedResults.Ok(new GeneralResultCart<List<ProductInCartDto>>() { Data = productsInCart,TotalCount=productsInCart.Count(),TotalPrice=totalPrice, Success = true, Errors = [] });
+			return TypedResults.Ok(new GeneralResultCart<List<ProductInCartDto>>() {CartId=cartId , Data = productsInCart,TotalCount=productsInCart.Count(),TotalPrice=totalPrice, Success = true, Errors = [] });
 		}
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
