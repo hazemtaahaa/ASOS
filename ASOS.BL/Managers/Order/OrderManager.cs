@@ -22,7 +22,7 @@ namespace ASOS.BL.Managers.Order
         }
 
         // Create Order
-        public async Task<bool> CreateOrderAsync(Guid cartId, string address, string phoneNumber)
+        public async Task<object> CreateOrderAsync(Guid cartId, string address, string phoneNumber)
         {
             var cart = await _unitOfWork.Carts.GetCartByIdAsync(cartId);
             decimal totalAmount = 0;
@@ -34,7 +34,7 @@ namespace ASOS.BL.Managers.Order
 
                 if (product == null) return false;
 
-                totalAmount += (decimal)(product.Price * item.Quantity);
+                totalAmount += (decimal)(product.Price * item.Quantity) *100;
             }
 
             var order = new DAL.Models.Order
@@ -86,7 +86,7 @@ namespace ASOS.BL.Managers.Order
 
             await _unitOfWork.CompleteAsync();
 
-            return true;
+            return order.Id;
         }
 
         // Cancel Order 
