@@ -22,11 +22,15 @@ namespace ASOS.APIs.Controllers.Order
         public async Task<IActionResult> CreateOrder([FromQuery] Guid cartId, [FromQuery] string address, [FromQuery] string phoneNumber)
         {
             var result = await _orderManager.CreateOrderAsync(cartId, address, phoneNumber);
-            if (result)
+            var orderId = result as Guid?;
+            if (orderId != null)
             {
-                return Ok(new { message = "Order created successfully." });
+                var ClientSecret = await _orderManager.CompleteOrderPaymentAsync((Guid)orderId);
+
+                return Ok(new GeneralResult<string>() { Errors = [], Success = true, Data = (string)ClientSecret });
+
             }
-            return BadRequest(new { message = "Failed to create order." });
+            return BadRequest(new GeneralResult() { Errors = [new ResultError() { Message = "Failed to create order" }], Success = false });
         }
 
         [HttpPost("cancel")]
@@ -46,7 +50,6 @@ namespace ASOS.APIs.Controllers.Order
             var ClientSecret = await _orderManager.CompleteOrderPaymentAsync( orderId);
             
            return Ok(new GeneralResult<string> (){ Errors = [], Success = true, Data = (string)ClientSecret });
-            return BadRequest(new { message = "Failed to complete order." });
         }
 
         [HttpGet("user-orders")]
