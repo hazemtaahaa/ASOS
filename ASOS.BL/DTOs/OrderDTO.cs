@@ -15,6 +15,10 @@ namespace ASOS.BL.DTOs
 
         public OrderStatus Status { get; set; }
 
+        public string Address { get; set; }
+
+        public string PhoneNumber { get; set; }
+
         public string UserId { get; set; }
 
         public ICollection<OrderItemDTO> OrderItems { get; set; } = new List<OrderItemDTO>();
@@ -49,6 +53,8 @@ namespace ASOS.BL.DTOs
         public int Quantity { get; set; }
 
         public decimal Price { get; set; }
+
+        public List<string> ImageUrls { get; set; } = new List<string>();
     }
 
     public class OrderItemCreateDTO

@@ -29,7 +29,6 @@ namespace ASOS.BL.Managers.Payment
          
             var order = await _unitOfWork.Orders.GetByIdAsync(payment.UserOrderPayment.OrderId); 
 
-
             payment.Status = PaymentStatus.Approved;
 
             order.Status = OrderStatus.Shipped;

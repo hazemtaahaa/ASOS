@@ -16,6 +16,8 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
         return await _context.Orders
             .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Product)
+            .ThenInclude(p => p.ProductImages)
             .Include(o => o.UserOrderPayment)
             .ThenInclude(u=>u.User)      
             .FirstOrDefaultAsync(o => o.Id == id);

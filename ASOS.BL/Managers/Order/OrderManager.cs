@@ -22,7 +22,7 @@ namespace ASOS.BL.Managers.Order
         }
 
         // Create Order
-        public async Task<bool> CreateOrderAsync(Guid cartId, string address, string phoneNumber)
+        public async Task<object> CreateOrderAsync(Guid cartId, string address, string phoneNumber)
         {
             var cart = await _unitOfWork.Carts.GetCartByIdAsync(cartId);
             decimal totalAmount = 0;
@@ -34,7 +34,7 @@ namespace ASOS.BL.Managers.Order
 
                 if (product == null) return false;
 
-                totalAmount += (decimal)(product.Price * item.Quantity);
+                totalAmount += (decimal)(product.Price * item.Quantity) *100;
             }
 
             var order = new DAL.Models.Order
@@ -86,7 +86,7 @@ namespace ASOS.BL.Managers.Order
 
             await _unitOfWork.CompleteAsync();
 
-            return true;
+            return order.Id;
         }
 
         // Cancel Order 
@@ -162,7 +162,7 @@ namespace ASOS.BL.Managers.Order
             payment.StripPaymentId = paymentIntent.Id;
 
             
-            payment.Status = PaymentStatus.Approved;
+            //payment.Status = PaymentStatus.Approved;
             payment.PaymentMethod = DAL.PaymentMethod.Card;
             _unitOfWork.Payments.Update(payment);
             await _unitOfWork.CompleteAsync();
@@ -173,13 +173,13 @@ namespace ASOS.BL.Managers.Order
         }
 
 
-        // Get User Orders
+        // Fix for CS0029 and CS8602 in the GetUserOrdersAsync method
         public async Task<List<OrderDTO>> GetUserOrdersAsync(string userId)
         {
             var userOrderPayments = await _unitOfWork.UserOrderPayments.GetUserOrderPaymentByUserIdAsync(userId);
-           
+
             if (userOrderPayments is null)
-                return null; 
+                return null;
 
             var orderIds = userOrderPayments.Select(u => u.OrderId).ToList();
 
@@ -199,12 +199,14 @@ namespace ASOS.BL.Managers.Order
                 ArrivalDate = o.ArrivalDate,
                 Status = o.Status,
                 UserId = userId,
-
+                PhoneNumber = o.PhoneNumber,
+                Address = o.Address,
                 OrderItems = o.OrderItems.Select(oi => new OrderItemDTO
                 {
                     ProductId = oi.ProductId,
                     Quantity = (int)oi.Quantity,
-                    Price = (decimal)oi.TotalPrice ,
+                    Price = (decimal)oi.TotalPrice,
+                    ImageUrls = oi.Product?.ProductImages?.Select(p => p.ImageUrl).ToList() ?? new List<string>(), // Fix for CS0029 and CS8602
                 }).ToList(),
 
                 Payment = new PaymentDTO
