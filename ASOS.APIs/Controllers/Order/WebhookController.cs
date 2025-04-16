@@ -15,42 +15,14 @@ namespace ASOS.APIs.Controllers.Order
             _paymentManager = paymentManager;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post()
+        [HttpPost("{paymentIntentId}")]
+        public async Task<IActionResult> Post(string paymentIntentId)
         {
-            // Enable buffering to allow multiple reads of the request body
-            Request.EnableBuffering();
-            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-            HttpContext.Request.Body.Position = 0; // Reset position after reading
-
-            const string webhookSecret = "whsec_c3e2dc065ff33fcae80fa44e226b5c5a602b7e2399000faae119b01d8a05e9db"; // Get from Stripe CLI or dashboard
-
-            try
-            {
-                var stripeEvent = EventUtility.ConstructEvent(
-                    json,
-                    Request.Headers["Stripe-Signature"],
-                    webhookSecret
-                );
-
-                if (stripeEvent.Type == "payment_intent.succeeded")
-                {
-                    var intent = stripeEvent.Data.Object as PaymentIntent;
-                    if (intent != null) // Fix: Check for null reference
-                    {
-                        Console.WriteLine($"✅ Payment for {intent.Amount} succeeded.");
-
-                       await _paymentManager.UpdatePaymentIntent(intent.Id);  
-                        // TODO: Update DB, send email, etc.
-                    }
-                }
+            Console.WriteLine("Webhook received: " + paymentIntentId);
+            await _paymentManager.UpdatePaymentIntent(paymentIntentId);
 
                 return Ok();
-            }
-            catch (StripeException e)
-            {
-                return BadRequest(e.Message);
-            }
+
         }
     }
 }
