@@ -25,7 +25,7 @@ namespace ASOS.BL.Managers.Order
         public async Task<bool> CreateOrderAsync(Guid cartId, string address, string phoneNumber)
         {
             var cart = await _unitOfWork.Carts.GetCartByIdAsync(cartId);
-            long totalAmount = 0;
+            decimal totalAmount = 0;
 
             foreach (var item in cart.CartItems)
             {
@@ -34,7 +34,7 @@ namespace ASOS.BL.Managers.Order
 
                 if (product == null) return false;
 
-                totalAmount += (long)product.Price * item.Quantity;
+                totalAmount += (decimal)(product.Price * item.Quantity);
             }
 
             var order = new DAL.Models.Order
