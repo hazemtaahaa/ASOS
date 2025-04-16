@@ -5,6 +5,7 @@ using ASOS.DAL;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using ASOS.BL.DTOs.ProductInCart;
 
 namespace ASOS.BL.Managers.Cart
 {
@@ -70,6 +71,7 @@ namespace ASOS.BL.Managers.Cart
 				ProductTypeName = p.ProductType?.Name ?? string.Empty,
 				ImageUrls = p.ProductImages?.Select(i => $"{_configuration["ApiBaseUrl"]}{i.ImageUrl}").ToList() ?? new List<string>()
 			}).ToList();
+			
 			return productsDto;
 		}
 		/////////////////////////////////////////////////////////////////////
@@ -98,6 +100,7 @@ namespace ASOS.BL.Managers.Cart
 			{
 				user.Cart.CartItems.FirstOrDefault(ci=>ci.ProductId == productId)
 					.Quantity++;
+
 				await _unitOfWork.CompleteAsync();
 				return true;
 			}

@@ -5,6 +5,10 @@ using ASOS.BL.Managers.Cart;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ASOS.BL.DTOs.ProductInCart;
+using Microsoft.AspNetCore.Identity;
+using ASOS.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASOS.APIs.Controllers.Cart
 {
@@ -14,18 +18,47 @@ namespace ASOS.APIs.Controllers.Cart
 	public class CartController:ControllerBase
 	{
 		private readonly ICartManager _cartManager;
+		private readonly UserManager<User> _userManager;
 
-		public CartController(ICartManager cartManager)
+		public CartController(ICartManager cartManager, UserManager<User> userManager)
 		{
 			_cartManager= cartManager;
+			_userManager= userManager;
 		}
 
 		[HttpGet("products")]
-		public async Task<Ok<GeneralResult<List<ProductDTO>>>> GetAsync()
+		public async Task<Ok<GeneralResultCart<List<ProductInCartDto>>>> GetAsync()
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var user = await _userManager.Users
+				.Include(u => u.Cart)
+				.ThenInclude(c => c.CartItems)
+				.FirstOrDefaultAsync(u => u.Id == userId);
 			var products = await _cartManager.GetUserCartAsync(userId);
-			return TypedResults.Ok(new GeneralResult<List<ProductDTO>>() { Data = products, Success = true, Errors = [] });
+			var productsInCart= products.Select(p => new ProductInCartDto
+			{
+				Id = p.Id,
+				Name = p.Name,
+				Description = p.Description,
+				Price = p.Price,
+				Rate = p.Rate,
+				Quantity = p.Quantity,
+				Section = p.Section,
+
+				UpdatedAt = p.UpdatedAt,
+				CreatedAt = p.CreatedAt,
+				BrandName = p.BrandName,
+				CategoryName = p.CategoryName,
+				ProductTypeName = p.ProductTypeName,
+				ImageUrls = p.ImageUrls,
+				QuantityInCart= user.Cart.CartItems.FirstOrDefault(ci => ci.ProductId == p.Id).Quantity
+			}).ToList();
+			decimal totalPrice = 0;
+			foreach (var item in productsInCart)
+			{
+				totalPrice += (item.Price*item.QuantityInCart);
+			}
+			return TypedResults.Ok(new GeneralResultCart<List<ProductInCartDto>>() { Data = productsInCart,TotalCount=productsInCart.Count(),TotalPrice=totalPrice, Success = true, Errors = [] });
 		}
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
