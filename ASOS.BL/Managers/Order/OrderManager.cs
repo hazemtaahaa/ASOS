@@ -203,10 +203,11 @@ namespace ASOS.BL.Managers.Order
                 Address = o.Address,
                 OrderItems = o.OrderItems.Select(oi => new OrderItemDTO
                 {
+                    Name = oi.Product.Name,
                     ProductId = oi.ProductId,
                     Quantity = (int)oi.Quantity,
                     Price = (decimal)oi.TotalPrice,
-                    ImageUrls = oi.Product?.ProductImages?.Select(p => p.ImageUrl).ToList() ?? new List<string>(), // Fix for CS0029 and CS8602
+                    ImageUrls = oi.Product?.ProductImages?.Select(p => $"{_configuration["ApiBaseUrl"]}{p.ImageUrl}").ToList() ?? new List<string>(), // Fix for CS0029 and CS8602
                 }).ToList(),
 
                 Payment = new PaymentDTO

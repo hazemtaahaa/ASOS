@@ -54,6 +54,8 @@ namespace ASOS.BL.DTOs
 
         public decimal Price { get; set; }
 
+        public string Name { get; set; }
+
         public List<string> ImageUrls { get; set; } = new List<string>();
     }
 
